@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cyber Duck Math</title>
+  <style>
+    /* RESET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000;
+      color: #0ff;
+      font-family: 'Courier New', monospace;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      padding: 2rem;
+      background: repeating-linear-gradient(45deg, #000, #000 2px, #111 2px, #111 4px);
+    }
+
+    .glitch {
+      font-size: 2.5rem;
+      position: relative;
+      color: #0ff;
+      animation: glitch 1s infinite;
+    }
+
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: #f0f;
+      overflow: hidden;
+      clip: rect(0, 900px, 0, 0);
+    }
+
+    .glitch::before {
+      animation: glitch-1 2s infinite linear alternate-reverse;
+    }
+
+    .glitch::after {
+      animation: glitch-2 2s infinite linear alternate-reverse;
+    }
+
+    @keyframes glitch {
+      0% { text-shadow: 0 0 5px #0ff; }
+      100% { text-shadow: 0 0 10px #f0f, 0 0 20px #0ff; }
+    }
+
+    @keyframes glitch-1 {
+      0% { clip: rect(42px, 9999px, 44px, 0); transform: skew(0.5deg); }
+      100% { clip: rect(12px, 9999px, 59px, 0); transform: skew(0.2deg); }
+    }
+
+    @keyframes glitch-2 {
+      0% { clip: rect(65px, 9999px, 119px, 0); transform: skew(0.5deg); }
+      100% { clip: rect(36px, 9999px, 89px, 0); transform: skew(0.2deg); }
+    }
+
+    .duck-container {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .duck {
+      width: 150px;
+      filter: drop-shadow(0 0 10px #0ff);
+    }
+
+    .bubble {
+      display: inline-block;
+      background: #111;
+      border: 2px solid #0ff;
+      padding: 1rem;
+      border-radius: 10px;
+      max-width: 300px;
+      margin-left: 1rem;
+      vertical-align: top;
+    }
+
+    .quiz-container {
+      margin: 3rem auto;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    input[type="number"] {
+      width: 100px;
+      padding: 0.5rem;
+      font-size: 1.2rem;
+      margin: 1rem 0;
+      background: #000;
+      color: #0ff;
+      border: 2px solid #0ff;
+      outline: none;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      background: #000;
+      color: #0ff;
+      border: 2px solid #0ff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #0ff;
+      color: #000;
+    }
+
+    @media (max-width: 600px) {
+      .bubble {
+        margin-left: 0;
+        margin-top: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 class="glitch" data-text="CyberDuckMath">CyberDuckMath</h1>
+    <p>La papera hacker che ti insegna la matematica</p>
+  </header>
+
+  <main>
+    <section class="duck-container">
+      <img src="images/cyberduck.png" alt="Cyber Duck" class="duck">
+      <div class="bubble">
+        <p id="duck-text">Ciao! Sono ByteQuack. Risolvi il mio quiz per passare al livello successivo!</p>
+      </div>
+    </section>
+
+    <section class="quiz-container">
+      <div id="quiz-box">
+        <h2 id="question">Quanto fa 7 × 8?</h2>
+        <input type="number" id="answer" placeholder="Risposta..." />
+        <button onclick="checkAnswer()">Invia</button>
+        <p id="feedback"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer style="text-align:center; padding:1rem;">
+    <p>Powered by QuackOS 9.9.9</p>
+  </footer>
+
+  <script>
+    const questions = [
+      { q: "Quanto fa 7 × 8?", a: 56 },
+      { q: "Quanto fa 12 + 34?", a: 46 },
+      { q: "Quanto fa 99 - 33?", a: 66 },
+      { q: "Quanto fa 144 ÷ 12?", a: 12 }
+    ];
+
+    let current = 0;
+
+    function showQuestion() {
+      document.getElementById("question").textContent = questions[current].q;
+      document.getElementById("answer").value = "";
+      document.getElementById("feedback").textContent = "";
+      document.getElementById("duck-text").textContent = "Risolvi il prossimo grattacapo!";
+    }
+
+    function checkAnswer() {
+      const userAnswer = parseInt(document.getElementById("answer").value, 10);
+      const correct = questions[current].a;
+
+      if (userAnswer === correct) {
+        document.getElementById("feedback").textContent = "Corretto! Passa al prossimo livello!";
+        document.getElementById("duck-text").textContent = "Bravo! Ma il prossimo è più difficile...";
+        current++;
+        if (current < questions.length) {
+          setTimeout(showQuestion, 1500);
+        } else {
+          document.getElementById("quiz-box").innerHTML = "<h2>Hai completato tutti i livelli! Sei un vero hacker della matematica!</h2>";
+          document.getElementById("duck-text").textContent = "Missione completata! Quack!";
+        }
+      } else {
+        document.getElementById("feedback").textContent = "Riprova! La papera ti osserva...";
+        document.getElementById("duck-text").textContent = "Non mollare! Anche i bug si correggono!";
+      }
+    }
+  </script>
+</body>
+</html>
